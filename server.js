@@ -1,17 +1,18 @@
-import express from "express";
-import bodyParser from "body-parser";
-import pg from "pg";
+const express = require("express");
+const bodyParser = require("body-parser");
+const pg = require("pg");
+
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 const db = new pg.Client({
-    user: "alma_db_2qre_user",
-    host: "dpg-cpo2tt6ehbks738gh0u0-a.frankfurt-postgres.render.com",
-    database: "alma_db_2qre",
-    password: "TKTJDyXWzUaKUi2ProeN0WYFF6dGlZOQ",
+    user: "out_of_stock_user",
+    host: "dpg-cpo6pbaju9rs73as5sog-a.oregon-postgres.render.com",
+    database: "out_of_stock",
+    password: "gM40GyIJEMdbDAl7kErE9dbtq9cgAahS",
     port: 5432,
-  
+    ssl: { rejectUnauthorized: false }
 });
 db.connect();
 
