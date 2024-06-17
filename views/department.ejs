@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= department %> Department Tracking</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+</head>
+<body>
+    <header class="department-header" style="background-image: url('/assets/header1.jpg');">
+        <div><%= department %> Department</div>
+    </header>
+    <div class="container">
+        <h2><%= department %> Department Tracking</h2>
+        <form action="/department/<%= department %>/add" method="POST" onsubmit="return checkInput()">
+            <input type="text" id="skuInput" name="newSku" placeholder="Please enter SKU here" oninput="toggleButton()">
+            <button type="submit" id="addBtn" disabled>Add SKU</button>
+        </form>
+        <table class="sku-table">
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>Date of SKU added</th>
+                    <th>Ordered</th>
+                    <th>Arrived</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% listsku.forEach(item => { %>
+                    <tr>
+                        <td><%= item.sku_code %></td>
+                        <td><%= new Date(item.date_added).toLocaleDateString() %></td>
+                        <td>
+                            <form action="/department/<%= department %>/updateDateOrder" method="POST">
+                                <input type="hidden" name="updatedskuId" value="<%= item.id %>">
+                                <input type="checkbox" name="dateOrderChecked" <%= item.ordered ? 'checked' : '' %> onchange="handleCheckboxChange1(this)">
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/department/<%= department %>/updateDateArrival" method="POST">
+                                <input type="hidden" name="updatedskuId2" value="<%= item.id %>">
+                                <input type="checkbox" name="dateArrivalChecked" <%= item.arrived ? 'checked' : '' %> onchange="handleCheckboxChange(this)">
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/department/<%= department %>/delete" method="POST" onsubmit="return confirmDelete()">
+                                <input type="hidden" name="deleteskuId" value="<%= item.id %>">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        <button class="export-button" onclick="exportToExcel()">Export to Excel</button>
+    </div>
+
+    <!-- JavaScript functions -->
+    <script>
+        function toggleButton() {
+            var skuInput = document.getElementById("skuInput");
+            var addBtn = document.getElementById("addBtn");
+
+            // Enable the button if SKU input is not empty, otherwise disable it
+            if (skuInput.value.trim() !== "") {
+                addBtn.disabled = false;
+            } else {
+                addBtn.disabled = true;
+            }
+        }
+
+        function checkInput() {
+            var skuInput = document.getElementById("skuInput");
+            var placeholderText = "Please enter SKU here";
+
+            // Check if the input field is empty
+            if (skuInput.value.trim() === "") {
+                // Highlight the placeholder text in the input field
+                skuInput.placeholder = "Enter here the skuInput to add";
+                // Prevent form submission
+                event.preventDefault();
+            } else {
+                // Reset the placeholder text and color
+                skuInput.placeholder = placeholderText;
+            }
+        }
+
+        function handleCheckboxChange1(checkbox) {
+            var form = checkbox.closest('form');
+
+            if (checkbox.checked) {
+                form.submit();
+            } else {
+                deleteOrder(form);
+            }
+        }
+
+        function deleteOrder(form) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/department/<%= department %>/deleteDateOrder", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Refresh the page or update the UI as needed
+                    window.location.reload();
+                }
+            };
+            var formData = new FormData(form);
+            xhr.send(new URLSearchParams(formData).toString());
+        }
+
+        function handleCheckboxChange(checkbox) {
+            var form = checkbox.closest('form');
+            if (checkbox.checked) {
+                form.submit();
+            } else {
+                deleteDate(form);
+            }
+        }
+
+        function deleteDate(form) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/department/<%= department %>/deleteDate", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Refresh the page or update the UI as needed
+                    window.location.reload();
+                }
+            };
+            var formData = new FormData(form);
+            xhr.send(new URLSearchParams(formData).toString());
+        }
+
+        function exportToExcel() {
+            const table = document.querySelector('.sku-table');
+            const tableData = [];
+
+            // Define the indices of the columns you want to export
+            const columnIndices = {
+                SKU: -1,
+                'Date of SKU added': -1,
+                'ordered on': -1,
+                'arrived on': -1
+            };
+
+            // Get table headers (titles)
+            const headers = [];
+            table.querySelectorAll('thead th').forEach((header, index) => {
+                const headerText = header.textContent.trim();
+                if (headerText in columnIndices) {
+                    columnIndices[headerText] = index;
+                    headers.push(headerText);
+                }
+            });
+            tableData.push(headers);
+
+            // Get table rows
+            table.querySelectorAll('tbody tr').forEach(row => {
+                const rowData = [];
+
+                // Get data from selected columns in the row
+                for (const column of Object.values(columnIndices)) {
+                    if (column !== -1) {
+                        const cell = row.querySelectorAll('td')[column];
+                        rowData.push(cell.textContent.trim());
+                    }
+                }
+
+                // Push row data to table data array
+                tableData.push(rowData);
+            });
+
+            // Create a worksheet from the table data
+            const worksheet = XLSX.utils.aoa_to_sheet(tableData);
+
+            // Create a new workbook and add the worksheet
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+            // Save the workbook as an Excel file
+            XLSX.writeFile(workbook, 'table.xlsx');
+        }
+
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete the SKU from the list?');
+        }
+    </script>
+</body>
+</html>

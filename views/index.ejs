@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Tracking Home</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="home-background">
+        <h1 class="home-title">Company Department Tracking</h1>
+        <div class="department-buttons">
+            <% const departments = ["department1", "department2", "department3"]; %>
+            <% departments.forEach(department => { %>
+                <a href="/department/<%= department %>"><%= department.charAt(0).toUpperCase() + department.slice(1) %></a>
+            <% }); %>
+        </div>
+    </header>
+</body>
+</html>
