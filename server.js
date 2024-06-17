@@ -6,12 +6,12 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const db = new pg.Client({
-    user: "alma_db_user",
-    host: "dpg-cp255ien7f5s73fb0l10-a.frankfurt-postgres.render.com",
-    database: "alma_db",
-    password: "YcKw6ps7C8J2NDUSPczmoGTgzedXzdJt",
+    user: "alma_db_2qre_user",
+    host: "dpg-cpo2tt6ehbks738gh0u0-a.frankfurt-postgres.render.com",
+    database: "alma_db_2qre",
+    password: "TKTJDyXWzUaKUi2ProeN0WYFF6dGlZOQ",
     port: 5432,
-    ssl: { rejectUnauthorized: false }
+  
 });
 db.connect();
 
