@@ -31,7 +31,7 @@ header {
 
 /* Home page styles */
 .home-background {
-    background: url('/assets/background.jpg"') no-repeat center center;
+    background: url(/assets/background.jpg) no-repeat center center;
     background-size: cover;
     height: 500px;
     display: flex;
