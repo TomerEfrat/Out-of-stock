@@ -66,7 +66,7 @@
 
 @media(max-width:700px){
     .text-box h1{
-        font-size: 20px; 
+        font-size: 36px; 
     }
     .row{
         flex-direction: column;
@@ -91,7 +91,13 @@
     font-size: 36px; 
 }
 @media(max-width: 700px){
-    .dep1-header h1 {      
+    .dep1-header{
+        height: 50vh;
+        width: 100%;
+        background-image: linear-gradient(rgba(4, 9, 30, 0.151),rgba(4, 9, 30, 0.151)),url(/assets/dep1phone.jpg);
+    }
+    .dep1-header h1 {
+        padding-top: 20px;      
         font-size: 36px;
     }
     .dep1-header h3{
@@ -143,7 +149,6 @@
     margin: auto;
     text-align: center;
     box-sizing: border-box; /* Include padding and border in the total width */
-    
     font-size: 0.9em;
     overflow-x:auto;
   }
@@ -194,8 +199,14 @@
     font-size: 36px; 
 }
 @media(max-width: 700px){
+    .dep2-header{
+        height: 50vh;
+        width: 100%;
+        background-image: linear-gradient(rgba(4, 9, 30, 0.151),rgba(4, 9, 30, 0.151)),url(/assets/dep2phone.jpg);
+    }
     .dep2-header h1 {      
         font-size: 36px;
+        padding-top: 20px;
     }
     .dep2-header h3{
         font-size: 22px; 
@@ -219,8 +230,14 @@
     font-size: 36px; 
 }
 @media(max-width: 700px){
+    .dep3-header{
+        height: 50vh;
+        width: 100%;
+        background-image: linear-gradient(rgba(4, 9, 30, 0.151),rgba(4, 9, 30, 0.151)),url(/assets/dep3phone.jpg);
+    }
     .dep3-header h1 {      
         font-size: 36px;
+        padding-top: 20px;
     }
     .dep3-header h3{
         font-size: 22px; 
