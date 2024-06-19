@@ -243,3 +243,13 @@
         font-size: 22px; 
     }
 }
+@media(max-width: 700px){
+    .sku-table{
+        width: 90%;
+        margin: auto;
+        text-align: center;
+        box-sizing: border-box; /* Include padding and border in the total width */
+        font-size: 0.9em;
+        overflow-x:auto;   
+    }
+}
