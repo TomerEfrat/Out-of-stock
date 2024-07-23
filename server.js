@@ -22,6 +22,7 @@ app.set('view engine', 'ejs');
 let sku_tracking1 = [];
 let sku_tracking2 = [];
 let sku_tracking3 = [];
+let sku_tracking4 = [];
 
 // Home page route
 app.get("/", (req, res) => {
@@ -261,6 +262,85 @@ app.post("/deleteDate3", async (req, res) => {
     res.status(500).send("Error deleting date.");
   }
 });
+
+// Department 4 routes
+app.get("/department4", async (req, res) => {
+  try {
+    const result = await db.query("SELECT * FROM sku_tracking4 ORDER BY id4 ASC");
+    sku_tracking4 = result.rows;
+    res.render("department4.ejs", { listsku4: sku_tracking4 });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/add4", async (req, res) => {
+  const sku_code4 = req.body.newSku;
+  const date_added4 = new Date();
+  try {
+    await db.query("INSERT INTO sku_tracking4 (sku_code4, date_added4) VALUES ($1, $2)", [sku_code4, date_added4]);
+    res.redirect("/department4");
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/delete4", async (req, res) => {
+  const id4 = req.body.deleteskuId;
+  try {
+    await db.query("DELETE FROM sku_tracking4 WHERE id4 = $1", [id4]);
+    res.redirect("/department4");
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/updateDateOrder4", async (req, res) => {
+  const ordered4 = req.body.dateOrderChecked;
+  const id4 = req.body.updatedskuId;
+  const order_date4 = new Date();
+  try {
+    await db.query("UPDATE sku_tracking4 SET ordered4 = $1, order_date4 = $2 WHERE id4 = $3", [ordered4, order_date4, id4]);
+    res.redirect("/department4");
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/deleteDateOrder4", async (req, res) => {
+  const id4 = req.body.updatedskuId;
+  try {
+    await db.query("UPDATE sku_tracking4 SET ordered4 = false, order_date4 = NULL WHERE id4 = $1", [id4]);
+    res.sendStatus(200);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error deleting order date.");
+  }
+});
+
+app.post("/updateDateArrival4", async (req, res) => {
+  const arrived4 = req.body.dateArrivalChecked;
+  const id4 = req.body.updatedskuId2;
+  const arrival_date4 = new Date();
+  try {
+    await db.query("UPDATE sku_tracking4 SET arrived4 = $1, arrival_date4 = $2 WHERE id4 = $3", [arrived4, arrival_date4, id4]);
+    res.redirect("/department4");
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/deleteDate4", async (req, res) => {
+  const id4 = req.body.updatedskuId2;
+  try {
+    await db.query("UPDATE sku_tracking4 SET arrived4 = false, arrival_date4 = NULL WHERE id4 = $1", [id4]);
+    res.sendStatus(200);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error deleting date.");
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

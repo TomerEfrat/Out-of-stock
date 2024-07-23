@@ -30,7 +30,7 @@
     justify-content: space-between;
 }
 .dep-col{
-    flex-basis: 31%;
+    flex-basis: 22%;
     display: inline-block;
     background: #fff3f3c5;
     text-decoration: none;
